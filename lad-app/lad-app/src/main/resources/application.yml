@@ -1,0 +1,51 @@
+app.name: lad
+app.description: Lightning Address Daemon
+app.home: '${user.home}/.lad'
+
+spring.application.name: '${app.name}'
+spring.http.log-request-details: false
+
+server.port: 8080
+server.use-forward-headers: true
+server.compression.enabled: true
+
+management.server.port: 9001
+
+# LOGGING
+logging.file.name: '${app.home}/${app.name}.log'
+logging.config: classpath:logback.xml
+logging.logback.rollingpolicy.clean-history-on-start: true
+logging.level.org.springframework: INFO
+logging.level.org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+#logging.level.web: DEBUG
+
+spring.datasource.url: 'jdbc:sqlite:${app.home}/lna_example_application.db'
+spring.datasource.driver-class-name: org.sqlite.JDBC
+spring.datasource.hikari.pool-name: SQLitePool
+# database can be quite large, and connection sometimes takes > 30s..
+spring.datasource.hikari.connection-timeout: 45000 #maximum number of milliseconds that a client will wait for a connection
+spring.datasource.hikari.connection-test-query: 'SELECT 1'
+spring.datasource.hikari.minimum-idle: 1 #minimum number of idle connections maintained by HikariCP in a connection pool
+spring.datasource.hikari.maximum-pool-size: 1 #maximum pool size
+spring.datasource.hikari.idle-timeout: 30000 # 0 means that idle connections are never removed from the pool
+#spring.datasource.hikari.idle-timeout: 45000 #maximum idle time for connection
+spring.datasource.hikari.max-lifetime: 1800000 # maximum lifetime in milliseconds of a connection in the pool after it is closed.
+spring.datasource.hikari.auto-commit: false
+
+spring.jpa.properties.hibernate.dialect: org.hibernate.community.dialect.SQLiteDialect
+spring.jpa.properties.hibernate.jdbc.time_zone: UTC
+
+org.tbk.tor:
+  enabled: true
+  auto-publish-enabled: true
+  working-directory: '${app.home}/tor-working-dir'
+  startup-timeout: 60s
+
+org.tbk.lightning.lnd.grpc:
+  enabled: true
+  host: localhost
+  port: 20009
+  # path to the admin macaroon file within the container!
+  macaroon-file-path: '/root/.lnd/data/chain/bitcoin/regtest/admin.macaroon'
+  # path to the tls cert file within the container!
+  cert-file-path: '/root/.lnd/tls.cert'

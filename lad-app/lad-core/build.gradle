@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+description = 'lad core package'
+
+dependencies {
+    api "io.projectreactor:reactor-core"
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+}

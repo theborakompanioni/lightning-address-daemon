@@ -1,0 +1,5 @@
+rootProject.name = 'lightning-address-daemon'
+
+include 'lad-app:lad-core'
+include 'lad-app:lad-app'
+
