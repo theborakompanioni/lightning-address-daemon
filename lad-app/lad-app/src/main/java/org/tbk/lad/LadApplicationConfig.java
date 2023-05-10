@@ -10,6 +10,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.tbk.tor.hs.HiddenServiceDefinition;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,17 @@ class LadApplicationConfig implements InitializingBean {
 
     @Bean
     @Profile("!test")
-    public ApplicationRunner mainRunner(SynchronousLndAPI lndApi) {
+    public ApplicationRunner logOnionServiceInfo(HiddenServiceDefinition onionServiceDefinition) {
+        return args -> {
+            log.info("[tor] virtual host: {}", onionServiceDefinition.getVirtualHost().orElse("unavailable"));
+            log.info("[tor] virtual port: {}", onionServiceDefinition.getVirtualPort());
+            log.info("[tor] directory: {}", onionServiceDefinition.getDirectory().getAbsolutePath());
+        };
+    }
+
+    @Bean
+    @Profile("!test")
+    public ApplicationRunner logLndInfo(SynchronousLndAPI lndApi) {
         return args -> {
             GetInfoResponse info = lndApi.getInfo();
             log.info("[lnd] identity_pubkey: {}", info.getIdentityPubkey());

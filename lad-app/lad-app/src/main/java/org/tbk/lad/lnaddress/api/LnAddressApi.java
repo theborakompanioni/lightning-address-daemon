@@ -49,7 +49,7 @@ public class LnAddressApi {
     private final LnAddressService lnAddressService;
 
     @NonNull
-    private final HiddenServiceDefinition hiddenServiceDefinition;
+    private final HiddenServiceDefinition onionServiceDefinition;
 
     @GetMapping(path = "/.well-known/lnurlp/{username}")
     public ResponseEntity<LnurlPayCallbackData> lnurlpUsername(@PathVariable("username") String username) {
@@ -102,8 +102,8 @@ public class LnAddressApi {
         // TODO: take domain from Tor Hidden Service if it is empty
         //      otherwise throw exception, as it should not be taken from Host header
         String host = properties.getDomain().orElseGet(() -> {
-            String vhost = hiddenServiceDefinition.getVirtualHostOrThrow();
-            int port = hiddenServiceDefinition.getVirtualPort();
+            String vhost = onionServiceDefinition.getVirtualHostOrThrow();
+            int port = onionServiceDefinition.getVirtualPort();
             return vhost + (port == 80 ? "" : ":" + port);
         });
 

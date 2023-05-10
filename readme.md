@@ -17,7 +17,6 @@ e.g. zap@0123456789abcdef.onion
 
 TODO:
 - [ ] rename to lightning-address-daemon lad
-- [ ] log onion service information at startup
 - [ ] integration tests
 - [ ] docs (logo, description, etc)
 - [ ] multiple node implementations (currently only LND)
@@ -30,6 +29,28 @@ TODO:
 ## Run
 ```shell
 ./gradlew -p lad-app/lad-app bootRun --args='--spring.profiles.active=development'
+```
+
+```shell
+ ▄▄▄     ▄▄▄▄▄▄▄ ▄▄▄▄▄▄
+█   █   █       █      █
+█   █   █   ▄   █  ▄    █
+█   █   █  █▄█  █ █ █   █
+█   █▄▄▄█       █ █▄█   █
+█       █   ▄   █       █
+█▄▄▄▄▄▄▄█▄▄█ █▄▄█▄▄▄▄▄▄█
+
+INFO 48685 : Starting LadApplication using Java 18.0.2.1 with PID 48685
+INFO 48685 : The following 1 profile is active: "development"
+INFO 48685 : Starting Tor
+INFO 48685 : Tomcat started on port(s): 8080 (http) with context path ''
+INFO 48685 : Started LadApplication in 13.918 seconds (process running for 14.328)
+INFO 48685 : [tor] virtual host: 012345...abcdef.onion
+INFO 48685 : [tor] virtual port: 80
+INFO 48685 : [tor] directory: /home/user/.lad-dev/tor-working-dir/spring_boot_app
+INFO 48685 : [lnd] identity_pubkey: 012345...abcdef
+INFO 48685 : [lnd] alias: tbk-lnd-example-application
+INFO 48685 : [lnd] version: 0.16.1-beta commit=v0.16.1-beta
 ```
 
 ## Development
