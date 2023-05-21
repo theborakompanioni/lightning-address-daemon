@@ -19,7 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(
+        // using a different working-directory prevents "tor binary is still in use" exception
+        properties = "org.tbk.tor.working-directory=tor-working-dir-mockmvc"
+)
 @AutoConfigureMockMvc(print = MockMvcPrint.LOG_DEBUG, printOnlyOnFailure = false)
 @ActiveProfiles("test")
 class LnAddressApiTest {

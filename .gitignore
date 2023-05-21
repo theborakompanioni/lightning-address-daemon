@@ -99,4 +99,5 @@ application-management.port
 *.hprof
 .resourceCache/
 tor-working-dir/
+tor-working-dir-mockmvc/
 tmp/
