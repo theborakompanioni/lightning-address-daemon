@@ -14,13 +14,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.tbk.lad.lnaddress.LnAddressApplicationProperties;
 import org.tbk.lad.lnaddress.spi.LnAddressCallbackUrlResolver;
 import org.tbk.lad.lnaddress.spi.LnAddressResolver;
 import org.tbk.lad.lnaddress.spi.LnAddressService;
 import org.tbk.lad.lnaddress.spi.dto.LnAddressParts;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayCallbackData;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayInvoiceData;
-import org.tbk.lad.lnaddress.LnAddressApplicationProperties;
 import org.tbk.tor.hs.HiddenServiceDefinition;
 
 import java.time.Duration;
@@ -107,10 +107,10 @@ public class LnAddressApi {
             return vhost + (port == 80 ? "" : ":" + port);
         });
 
-        String address = String.format("%s@%s", username, host);
+        String address = "%s@%s".formatted(username, host);
         LnAddressParts lnAddressParts = lnAddressResolver.resolveLnAddressParts(address);
 
-        return String.format("%s@%s", lnAddressParts.getUsername(), lnAddressParts.getDomain());
+        return "%s@%s".formatted(lnAddressParts.getUsername(), lnAddressParts.getDomain());
     }
 
     private static LnAddressCallbackUrlResolver createCallbackUrlResolver(LnAddressParts lnAddressParts) {

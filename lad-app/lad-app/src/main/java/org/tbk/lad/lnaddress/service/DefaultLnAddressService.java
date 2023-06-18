@@ -26,8 +26,8 @@ public class DefaultLnAddressService implements LnAddressService {
         URI callbackUrl = callbackUrlResolver.resolveLnurlPayCallbackUrl(lnAddressParts);
 
         List<String> metadataList = List.of(
-                String.format("[\"text/plain\",\"Deposit to %s\"]", lnAddressParts.getUsername()),
-                String.format("[\"text/identifier\",\"%s\"]", lnAddressParts.getRaw())
+                "[\"text/plain\",\"Deposit to %s\"]".formatted(lnAddressParts.getUsername()),
+                "[\"text/identifier\",\"%s\"]".formatted(lnAddressParts.getRaw())
         );
 
         return Mono.just(LnurlPayCallbackData.builder()

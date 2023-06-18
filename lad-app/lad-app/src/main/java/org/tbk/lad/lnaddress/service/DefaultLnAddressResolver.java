@@ -32,7 +32,7 @@ public class DefaultLnAddressResolver implements LnAddressResolver {
         boolean isTor = domain.endsWith(".onion");
         String scheme = isTor || domain.startsWith("localhost:") ? "http" : "https";
 
-        String sanitizedDomain = UriComponentsBuilder.fromHttpUrl(String.format("%s://%s", scheme, domain))
+        String sanitizedDomain = UriComponentsBuilder.fromHttpUrl("%s://%s".formatted(scheme, domain))
                 .replacePath(null)
                 .replaceQuery(null)
                 .fragment(null)
