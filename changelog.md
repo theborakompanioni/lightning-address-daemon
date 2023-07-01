@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - upgrade: update bitcoin-spring-boot-starter from v0.8.0 to v0.9.0
+- upgrade: update sqlite from v3.41.2.1 to v3.42.0.0
 
 
 ## [0.0.1] - 2023-05-10
