@@ -1,5 +1,5 @@
 ext {
-    bitcoinSpringBootStarterVersion = '0.9.0'
+    bitcoinSpringBootStarterVersion = '0.10.0'
     torSpringBootStarterVersion = '0.8.0'
     guavaVersion = '30.1-jre'
     jmoleculesBomVersion = '2022.3.0'
