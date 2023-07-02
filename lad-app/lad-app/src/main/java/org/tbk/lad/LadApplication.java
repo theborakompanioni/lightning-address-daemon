@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationListener;
 import java.util.TimeZone;
 
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(proxyBeanMethods = false)
 public class LadApplication implements InitializingBean {
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));

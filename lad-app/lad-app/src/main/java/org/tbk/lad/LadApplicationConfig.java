@@ -50,7 +50,7 @@ class LadApplicationConfig implements InitializingBean {
 
     @Bean
     @Profile("!test")
-    public ApplicationRunner logOnionServiceInfo(HiddenServiceDefinition onionServiceDefinition) {
+    ApplicationRunner logOnionServiceInfo(HiddenServiceDefinition onionServiceDefinition) {
         return args -> {
             log.info("[tor] virtual host: {}", onionServiceDefinition.getVirtualHost().orElse("unavailable"));
             log.info("[tor] virtual port: {}", onionServiceDefinition.getVirtualPort());
@@ -60,7 +60,7 @@ class LadApplicationConfig implements InitializingBean {
 
     @Bean
     @Profile("!test")
-    public ApplicationRunner logLndInfo(SynchronousLndAPI lndApi) {
+    ApplicationRunner logLndInfo(SynchronousLndAPI lndApi) {
         return args -> {
             GetInfoResponse info = lndApi.getInfo();
             log.info("[lnd] identity_pubkey: {}", info.getIdentityPubkey());

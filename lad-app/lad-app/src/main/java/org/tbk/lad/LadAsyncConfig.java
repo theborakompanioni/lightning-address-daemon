@@ -19,7 +19,7 @@ class LadAsyncConfig implements AsyncConfigurer {
     }
 
     @Bean("tbkSpringAsyncTaskExecutor")
-    public ThreadPoolTaskExecutor taskExecutor() {
+    ThreadPoolTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.setThreadNamePrefix("tbk-async-");
         threadPoolTaskExecutor.setCorePoolSize(1);

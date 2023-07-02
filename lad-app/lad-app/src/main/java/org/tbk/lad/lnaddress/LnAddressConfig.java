@@ -14,23 +14,23 @@ import org.tbk.lad.lnaddress.spi.LnAddressResolver;
 import org.tbk.lad.lnaddress.spi.LnAddressService;
 
 @Slf4j
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(LnAddressApplicationProperties.class)
-public class LnAddressConfig {
+class LnAddressConfig {
 
     @Bean
-    public LnAddressResolver lnAddressResolver() {
+    LnAddressResolver lnAddressResolver() {
         return new DefaultLnAddressResolver();
     }
 
     @Bean
-    public LnAddressService lnAddressService(DefaultLnAddressService.InvoiceProvider lndInvoiceProvider) {
+    LnAddressService lnAddressService(DefaultLnAddressService.InvoiceProvider lndInvoiceProvider) {
         return new DefaultLnAddressService(lndInvoiceProvider);
     }
 
     // TODO: currently hardcoded LND - make it work with other implementations also.
     @Bean
-    public DefaultLnAddressService.InvoiceProvider lndInvoiceProvider(SynchronousLndAPI lndApi) {
+    DefaultLnAddressService.InvoiceProvider lndInvoiceProvider(SynchronousLndAPI lndApi) {
         return amountAndComment -> {
             AddInvoiceResponse addInvoiceResponse = lndApi.addInvoice(new Invoice(LightningApi.Invoice.newBuilder()
                     .setValueMsat(amountAndComment.getAmount())

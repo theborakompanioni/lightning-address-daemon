@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
+class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
 
     public static final String APP_HANDLER_PATH = "/swagger-ui";
 
@@ -24,11 +24,11 @@ public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
     }
 
     @Bean
-    public OpenAPI openApi() {
+    OpenAPI openApi() {
         return new OpenAPI()
                 .info(new Info()
                         .version(this.getClass().getPackage().getImplementationVersion())
-                        .title("lna API")
+                        .title("Lightning Address Daemon API")
                         .description(".")
                         .termsOfService("https://github.com/theborakompanioni/lightning-address-daemon")
                         .contact(new Contact()

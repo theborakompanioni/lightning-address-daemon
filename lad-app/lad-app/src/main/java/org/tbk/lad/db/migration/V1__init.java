@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 
 @Component
-public class V1__init extends BaseJavaMigration {
+class V1__init extends BaseJavaMigration {
 
     @Override
     public void migrate(Context context) throws Exception {
