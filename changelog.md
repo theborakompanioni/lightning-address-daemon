@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - upgrade: update bitcoin-spring-boot-starter from v0.8.0 to v0.10.0
 - upgrade: update sqlite from v3.41.2.1 to v3.42.0.0
 - upgrade: update springdoc-openapi from v2.0.4 to v2.1.0
+- upgrade: update spring-boot from v3.1.0 to v3.1.1
 
 
 ## [0.0.1] - 2023-05-10
