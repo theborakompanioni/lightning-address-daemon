@@ -10,7 +10,6 @@ server.use-forward-headers: true
 server.compression.enabled: true
 
 management.server.port: 9001
-
 # LOGGING
 logging.file.name: '${app.home}/${app.name}.log'
 logging.config: classpath:logback.xml
@@ -32,6 +31,7 @@ spring.datasource.hikari.idle-timeout: 30000 # 0 means that idle connections are
 spring.datasource.hikari.max-lifetime: 1800000 # maximum lifetime in milliseconds of a connection in the pool after it is closed.
 spring.datasource.hikari.auto-commit: false
 
+spring.jpa.open-in-view: true # default is `true`, explicitly defined to hide the log message at startup
 spring.jpa.properties.hibernate.dialect: org.hibernate.community.dialect.SQLiteDialect
 spring.jpa.properties.hibernate.jdbc.time_zone: UTC
 
@@ -45,7 +45,5 @@ org.tbk.lightning.lnd.grpc:
   enabled: true
   host: localhost
   port: 20009
-  # path to the admin macaroon file within the container!
-  macaroon-file-path: '/root/.lnd/data/chain/bitcoin/regtest/admin.macaroon'
-  # path to the tls cert file within the container!
-  cert-file-path: '/root/.lnd/tls.cert'
+  macaroon-base64: '<my_admin_macaroon_in_base64>'
+  cert-base64: '<my_tls_cert_in_base64>'

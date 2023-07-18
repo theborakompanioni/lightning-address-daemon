@@ -1,29 +1,9 @@
-app.name: lad-dev
-app.description: A spring boot bitcoin demo application
-app.home: '${user.home}/.lad-dev'
-
-spring.application.name: '${app.name}'
-spring.http.log-request-details: false
-
-server.port: 8080
-server.use-forward-headers: true
-server.compression.enabled: true
-
-management.server.port: 9001
-
-# LOGGING
-logging.file.name: '${app.home}/${app.name}.log'
-logging.config: classpath:logback-development.xml
-logging.level.org.springframework: INFO
-logging.level.org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
-logging.level.web: DEBUG
-
-spring.jpa.show-sql: false # true
 
 spring.docker.compose:
   enabled: true
   file: ../../docker/regtest/docker-compose.yml
   stop.command: DOWN # STOP is default, DOWN stops and removes containers and networks
+  skip.in-tests: false
 
 org.tbk.lightning.lnd.grpc:
   enabled: true
@@ -43,13 +23,9 @@ org.tbk.bitcoin.jsonrpc:
 
 org.tbk.bitcoin.regtest:
   enabled: true
-  # mine blocks every 1 - 10 seconds
   mining:
     enabled: true
     # an address from "default_wallet" with key:
     # truth fever mom transfer steak immense lake jacket glide bring fancy electric
     coinbase-reward-address: bcrt1q0xtrupsjmqr7u7xz4meufd3a8pt6v553m8nmvz
-    mine-initial-amount-of-blocks: 101
-    next-block-duration:
-      min-duration: PT1S
-      max-duration: PT10S
+    mine-initial-amount-of-blocks: 1

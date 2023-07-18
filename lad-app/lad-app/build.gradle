@@ -41,6 +41,10 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenApiVersion}"
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    implementation "io.github.theborakompanioni:bitcoin-regtest-starter:${bitcoinSpringBootStarterVersion}"
-    implementation "io.github.theborakompanioni:spring-testcontainer-lnd-starter:${bitcoinSpringBootStarterVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    developmentOnly "io.github.theborakompanioni:bitcoin-regtest-starter:${bitcoinSpringBootStarterVersion}"
+
+    integTestImplementation 'org.springframework.boot:spring-boot-docker-compose'
+    integTestImplementation "io.github.theborakompanioni:bitcoin-regtest-starter:${bitcoinSpringBootStarterVersion}"
+
 }

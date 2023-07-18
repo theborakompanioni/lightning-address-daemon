@@ -1,0 +1,82 @@
+version: "3"
+
+services:
+  bitcoind_regtest:
+    container_name: bitcoind0
+    image: polarlightning/bitcoind:25.0
+    restart: always
+    command:
+      -regtest=1
+      -server=1
+      -whitelist=0.0.0.0/0
+      -txindex=1
+      -debug=rpc
+      -dns=0
+      -dnsseed=0
+      -networkactive=0
+      -uacomment=tbkdevbitcoindregtest
+      -printpriority=1
+      -logtimemicros=1
+      -rpcuser=regtest-rpc-user
+      -rpcpassword=regtest-rpc-pass
+      -rpcbind=0.0.0.0
+      -rpcallowip=0.0.0.0/0
+      -zmqpubrawblock=tcp://0.0.0.0:28332
+      -zmqpubrawtx=tcp://0.0.0.0:28333
+      -zmqpubhashblock=tcp://0.0.0.0:28334
+      -zmqpubhashtx=tcp://0.0.0.0:28335
+    expose:
+      - "18443"
+      - "28332"
+      - "28333"
+      - "28334"
+      - "28335"
+    ports:
+      - "18443:18443"
+      - "28332:28332"
+      - "28333:28333"
+      - "28334:28334"
+      - "28335:28335"
+
+  lnd_regtest:
+    container_name: lnd0
+    image: polarlightning/lnd:0.16.4-beta
+    restart: always
+    depends_on:
+      bitcoind_regtest:
+        condition: service_started # service_healthy
+    command:
+      # see https://docs.lightning.engineering/lightning-network-tools/lnd/lnd.conf for more options
+      - '--alias=lad_lnd0'
+      - '--listen=0.0.0.0:9735' # p2p port
+      - '--rpclisten=0.0.0.0:10009' # gRPC port
+      - '--bitcoin.active'
+      - '--bitcoin.node=bitcoind'
+      - '--bitcoin.regtest'
+      - '--bitcoind.rpchost=bitcoind0'
+      - '--bitcoind.rpcuser=regtest-rpc-user'
+      - '--bitcoind.rpcpass=regtest-rpc-pass'
+      - '--bitcoind.zmqpubrawblock=tcp://bitcoind0:28332'
+      - '--bitcoind.zmqpubrawtx=tcp://bitcoind0:28333'
+      - '--maxpendingchannels=2'
+      - '--norest'
+      - '--debuglevel=info'
+      - '--noseedbackup' #  so no create/unlock wallet is needed ("lncli unlock")
+    volumes:
+      - ./data/lnd/tls.cert:/home/lnd/.lnd/tls.cert
+      - ./data/lnd/tls.key:/home/lnd/.lnd/tls.key
+      - ./data/lnd/data/chain/bitcoin/regtest/macaroons.db:/home/lnd/.lnd/data/chain/bitcoin/regtest/macaroons.db
+      - ./data/lnd/data/chain/bitcoin/regtest/admin.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/admin.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/chainnotifier.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/chainnotifier.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/invoice.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/invoice.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/invoices.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/invoices.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/readonly.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/readonly.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/router.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/router.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/signer.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/signer.macaroon
+      - ./data/lnd/data/chain/bitcoin/regtest/walletkit.macaroon:/home/lnd/.lnd/data/chain/bitcoin/regtest/walletkit.macaroon
+    expose:
+      - "9735"
+      - "10009"
+    ports:
+      - "19735:9735"
+      - "20009:10009"

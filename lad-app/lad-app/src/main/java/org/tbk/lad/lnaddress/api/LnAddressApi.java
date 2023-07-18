@@ -22,6 +22,7 @@ import org.tbk.lad.lnaddress.spi.dto.LnAddressParts;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayCallbackData;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayInvoiceData;
 import org.tbk.tor.hs.HiddenServiceDefinition;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -53,7 +54,9 @@ public class LnAddressApi {
 
     @GetMapping(path = "/.well-known/lnurlp/{username}")
     public ResponseEntity<LnurlPayCallbackData> lnurlpUsername(@PathVariable("username") String username) {
-        LnurlPayCallbackData result = toLnurlPayCallbackData(username);
+        LnurlPayCallbackData result = toLnurlPayCallbackData(username)
+                .blockOptional(Duration.ofSeconds(30))
+                .orElseThrow(() -> new IllegalStateException("Remote timed out (callback data)."));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache()
@@ -69,7 +72,9 @@ public class LnAddressApi {
     public ResponseEntity<LnurlPayInvoiceData> lnurlpCallback(@PathVariable("username") String username,
                                                               @RequestParam("amount") long millsatoshi,
                                                               @RequestParam(name = "comment", required = false) String comment) {
-        LnurlPayCallbackData callbackResult = toLnurlPayCallbackData(username);
+        LnurlPayCallbackData callbackResult = toLnurlPayCallbackData(username)
+                .blockOptional(Duration.ofSeconds(30))
+                .orElseThrow(() -> new IllegalStateException("Remote timed out (callback data)."));
 
         LnurlPayInvoiceData result = lnAddressService.toLnurlPayInvoiceData(callbackResult, LnAddressService.AmountAndComment.builder()
                         .amount(millsatoshi)
@@ -88,14 +93,12 @@ public class LnAddressApi {
                 .body(result);
     }
 
-    private LnurlPayCallbackData toLnurlPayCallbackData(String username) {
+    private Mono<LnurlPayCallbackData> toLnurlPayCallbackData(String username) {
         String lnaddress = normalizeInternalLnAddress(username);
 
         LnAddressParts lnAddressParts = lnAddressResolver.resolveLnAddressParts(lnaddress);
 
-        return lnAddressService.toLnurlPayCallbackData(lnAddressParts, createCallbackUrlResolver(lnAddressParts))
-                .blockOptional(Duration.ofSeconds(30))
-                .orElseThrow(() -> new IllegalStateException("Remote timed out (callback data)."));
+        return lnAddressService.toLnurlPayCallbackData(lnAddressParts, createCallbackUrlResolver(lnAddressParts));
     }
 
     private String normalizeInternalLnAddress(String username) {
