@@ -4,6 +4,7 @@ app.home: '${user.home}/.lad'
 
 spring.application.name: '${app.name}'
 spring.http.log-request-details: false
+spring.threads.virtual.enabled: true
 
 server.port: 8080
 server.use-forward-headers: true
