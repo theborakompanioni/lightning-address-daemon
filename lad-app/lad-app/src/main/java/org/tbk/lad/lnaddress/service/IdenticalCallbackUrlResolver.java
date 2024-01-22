@@ -3,7 +3,7 @@ package org.tbk.lad.lnaddress.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.ForwardedHeaderUtils;
 import org.tbk.lad.lnaddress.spi.LnAddressCallbackUrlResolver;
 import org.tbk.lad.lnaddress.spi.dto.LnAddressParts;
 
@@ -17,7 +17,7 @@ public class IdenticalCallbackUrlResolver implements LnAddressCallbackUrlResolve
 
     @Override
     public URI resolveLnurlPayCallbackUrl(LnAddressParts parts) {
-        return UriComponentsBuilder.fromHttpRequest(request).build().toUri();
+        return ForwardedHeaderUtils.adaptFromForwardedHeaders(request.getURI(), request.getHeaders()).build().toUri();
     }
 
     // https://docs.spring.io/spring-hateoas/docs/current/reference/html/#server.link-builder.forwarded-headers
