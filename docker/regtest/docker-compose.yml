@@ -40,7 +40,7 @@ services:
 
   lnd_regtest:
     container_name: lnd0
-    image: polarlightning/lnd:0.16.4-beta
+    image: polarlightning/lnd:0.17.3-beta
     restart: always
     depends_on:
       bitcoind_regtest:
