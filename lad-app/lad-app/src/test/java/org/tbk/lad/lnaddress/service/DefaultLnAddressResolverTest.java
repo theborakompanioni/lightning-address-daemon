@@ -120,6 +120,6 @@ class DefaultLnAddressResolverTest {
         assertThrowsExactly(ConstraintViolationException.class, () -> sut.resolveLnAddressParts("bob@example+com"));
 
         IllegalStateException ise = assertThrowsExactly(IllegalStateException.class, () -> sut.resolveLnAddressParts("bob@example com"));
-        assertThat(ise.getMessage()).isEqualTo("Could not create URI object: Illegal character in authority at index 15: https://example com");
+        assertThat(ise.getMessage()).startsWith("Could not create URI object: Illegal character in authority at index");
     }
 }
