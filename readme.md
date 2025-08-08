@@ -56,7 +56,7 @@ INFO 48685 : [lnd] version: 0.16.1-beta commit=v0.16.1-beta
 ## Development
 
 ### Requirements
-- java >=17
+- java >=21
 
 ### Build
 ```shell script

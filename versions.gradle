@@ -1,16 +1,16 @@
 ext {
-    bitcoinSpringBootStarterVersion = '0.12.0'
-    torSpringBootStarterVersion = '0.8.0'
-    guavaVersion = '30.1-jre'
-    jmoleculesBomVersion = '2023.1.1'
-    sqliteVersion = '3.44.1.0'
-    hibernateCommunityDialectsVersion = '6.2.5.Final'
+    bitcoinSpringBootStarterVersion = '0.16.0'
+    torSpringBootStarterVersion = '0.9.0'
+    guavaVersion = '33.0.0-jre'
+    jmoleculesBomVersion = '2023.1.6'
+    bytebuddyPluginVersion = '1.17.3' // keep in sync with `jmoleculesBomVersion`
+    sqliteVersion = '3.48.0.0'
+    hibernateCommunityDialectsVersion = '6.6.11.Final'
     lombokVersion = '1.18.30'
-    springdocOpenApiVersion = '2.1.0'
+    springdocOpenApiVersion = '2.3.0'
     checkstyleVersion = '10.3.4'
-    findsecbugsPluginVersion = '1.12.0'
-    springBootGradlePluginVersion = '3.2.1'
-    bytebuddyPluginVersion = '1.14.11'
+    findsecbugsPluginVersion = '1.13.0'
+    springBootGradlePluginVersion = '3.3.5'
     zxingVersion = '3.5.0'
 }
 
