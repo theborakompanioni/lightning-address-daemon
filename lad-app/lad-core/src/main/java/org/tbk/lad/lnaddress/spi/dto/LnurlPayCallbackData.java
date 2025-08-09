@@ -1,12 +1,22 @@
 package org.tbk.lad.lnaddress.spi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * e.g.
@@ -23,13 +33,8 @@ import lombok.Value;
  */
 @Value
 @Builder
-@JsonDeserialize(builder = LnurlPayCallbackData.LnurlPayCallbackDataBuilder.class)
+@Jacksonized
 public class LnurlPayCallbackData {
-    @JsonPOJOBuilder(withPrefix = "")
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class LnurlPayCallbackDataBuilder {
-    }
-
     @NonNull
     String callback;
 
@@ -39,8 +44,10 @@ public class LnurlPayCallbackData {
     @NonNull
     Long minSendable;
 
-    @NonNull
-    String metadata;
+    @Singular("addMetadata")
+    @JsonSerialize(using = MetadataSerializer.class)
+    @JsonDeserialize(using = MetadataDeserializer.class)
+    List<List<String>> metadata;
 
     @NonNull
     @Builder.Default
@@ -51,5 +58,31 @@ public class LnurlPayCallbackData {
 
     public int getCommentAllowed() {
         return commentAllowed == null ? 0 : commentAllowed;
+    }
+
+    public static class MetadataSerializer extends JsonSerializer<List<List<String>>> {
+
+        @Override
+        public void serialize(List<List<String>> value, JsonGenerator jgen, SerializerProvider serializers) throws IOException {
+            String listAsString = "[%s]".formatted(value.stream()
+                    .map(arr -> arr.stream()
+                            .map("\"%s\""::formatted)
+                            .collect(Collectors.joining(","))
+                    )
+                    .map("[%s]"::formatted)
+                    .collect(Collectors.joining(",")));
+
+            jgen.writeString(listAsString);
+        }
+    }
+
+    public static class MetadataDeserializer extends JsonDeserializer<List<List<String>>> {
+        private static final ObjectMapper objectMapper = new ObjectMapper();
+
+        @Override
+        public List<List<String>> deserialize(JsonParser p, DeserializationContext ctx) throws IOException {
+            return objectMapper.readValue(p.getText(), new TypeReference<>() {
+            });
+        }
     }
 }

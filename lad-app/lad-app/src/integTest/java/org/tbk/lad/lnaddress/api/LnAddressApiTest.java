@@ -1,9 +1,7 @@
 package org.tbk.lad.lnaddress.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayCallbackData;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -43,10 +40,10 @@ class LnAddressApiTest {
         mockMvc.perform(get("/.well-known/lnurlp/test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("tag").value(is("payRequest")))
-                .andExpect(jsonPath("callback").isString())
+                .andExpect(jsonPath("callback").value(startsWith("http")))
                 .andExpect(jsonPath("minSendable").isNumber())
                 .andExpect(jsonPath("maxSendable").isNumber())
-                .andExpect(jsonPath("metadata").isString())
+                .andExpect(jsonPath("metadata").value(both(startsWith("[[\"")).and(endsWith("\"]]"))))
                 .andExpect(jsonPath("commentAllowed").isNumber());
     }
 
@@ -56,18 +53,15 @@ class LnAddressApiTest {
                 .getResponse().getContentAsString();
 
         LnurlPayCallbackData result = objectMapper.readValue(body, LnurlPayCallbackData.class);
-        assertThat(result.getMetadata(), is(notNullValue()));
 
-        JsonNode metadataNode = objectMapper.readTree(result.getMetadata());
-        assertThat(metadataNode.isArray(), is(true));
-
-        List<JsonNode> metadata = StreamSupport.stream(metadataNode.spliterator(), false).toList();
-        assertThat(metadata.get(0).get(0).asText(), is("text/plain"));
-        assertThat(metadata.get(0).get(1).asText(), is("Deposit to test"));
-        assertThat(metadata.get(1).get(0).asText(), is("text/identifier"));
-        assertThat(metadata.get(1).get(1).asText(), both(startsWith("test@")).and(endsWith(".onion")));
-        assertThat(metadata.get(2).get(0).asText(), is("text/tag"));
-        assertThat(metadata.get(2).get(1).asText(), is("my+tag"));
+        List<List<String>> metadata = result.getMetadata();
+        assertThat(metadata, hasSize(3));
+        assertThat(metadata.get(0).get(0), is("text/plain"));
+        assertThat(metadata.get(0).get(1), is("Deposit to test"));
+        assertThat(metadata.get(1).get(0), is("text/identifier"));
+        assertThat(metadata.get(1).get(1), both(startsWith("test@")).and(endsWith(".onion")));
+        assertThat(metadata.get(2).get(0), is("text/tag"));
+        assertThat(metadata.get(2).get(1), is("my+tag"));
     }
 
     @Test

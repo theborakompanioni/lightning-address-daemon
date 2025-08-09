@@ -1,13 +1,11 @@
 package org.tbk.lad.lnaddress.spi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
@@ -29,13 +27,8 @@ import java.util.List;
  */
 @Value
 @Builder
-@JsonDeserialize(builder = LnurlPayInvoiceData.LnurlPayInvoiceDataBuilder.class)
+@Jacksonized
 public class LnurlPayInvoiceData {
-    @JsonPOJOBuilder(withPrefix = "")
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class LnurlPayInvoiceDataBuilder {
-    }
-
     @NonNull
     String pr;
 
@@ -50,12 +43,8 @@ public class LnurlPayInvoiceData {
 
     @Value
     @Builder
-    @JsonDeserialize(builder = SuccessAction.SuccessActionBuilder.class)
+    @Jacksonized
     public static class SuccessAction {
-        @JsonPOJOBuilder(withPrefix = "")
-        public static final class SuccessActionBuilder {
-        }
-
         String tag;
         String description;
         String url;

@@ -10,6 +10,7 @@ import org.tbk.lad.lnaddress.spi.dto.LnurlPayInvoiceData;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,18 +28,19 @@ public class DefaultLnAddressService implements LnAddressService {
                                                              LnAddressCallbackUrlResolver callbackUrlResolver) {
         URI callbackUrl = callbackUrlResolver.resolveLnurlPayCallbackUrl(lnAddressParts);
 
-        List<String> metadataList = Stream.of(
-                "[\"text/plain\",\"Deposit to %s\"]".formatted(lnAddressParts.getUsername()),
-                "[\"text/identifier\",\"%s\"]".formatted(lnAddressParts.getIdentifier()),
-                lnAddressParts.getTag().map("[\"text/tag\",\"%s\"]"::formatted).orElse("")
-        ).filter(it -> !it.isBlank()).toList();
+        List<List<String>> metadataList = Stream.of(
+                        List.of("text/plain", "Deposit to %s".formatted(lnAddressParts.getUsername())),
+                        List.of("text/identifier", lnAddressParts.getIdentifier()),
+                        lnAddressParts.getTag().map(it -> List.of("text/tag", it)).orElseGet(Collections::emptyList)
+                ).filter(it -> !it.isEmpty())
+                .toList();
 
         return Mono.just(LnurlPayCallbackData.builder()
                 .callback(callbackUrl.toString())
                 .minSendable(1_000L)
                 .maxSendable(100_000_000_000L)
                 .commentAllowed(256)
-                .metadata("[" + String.join(",", metadataList) + "]")
+                .metadata(metadataList)
                 .build());
     }
 
