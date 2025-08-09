@@ -1,7 +1,9 @@
 package org.tbk.lad.lnaddress.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,8 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.tbk.lad.lnaddress.spi.dto.LnurlPayCallbackData;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import java.util.List;
+import java.util.stream.StreamSupport;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +35,9 @@ class LnAddressApiTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     void itShouldPreparePayment() throws Exception {
         mockMvc.perform(get("/.well-known/lnurlp/test"))
@@ -43,11 +51,31 @@ class LnAddressApiTest {
     }
 
     @Test
+    void itShouldPreparePaymentWithTag() throws Exception {
+        String body = mockMvc.perform(get("/.well-known/lnurlp/test+my+tag")).andReturn()
+                .getResponse().getContentAsString();
+
+        LnurlPayCallbackData result = objectMapper.readValue(body, LnurlPayCallbackData.class);
+        assertThat(result.getMetadata(), is(notNullValue()));
+
+        JsonNode metadataNode = objectMapper.readTree(result.getMetadata());
+        assertThat(metadataNode.isArray(), is(true));
+
+        List<JsonNode> metadata = StreamSupport.stream(metadataNode.spliterator(), false).toList();
+        assertThat(metadata.get(0).get(0).asText(), is("text/plain"));
+        assertThat(metadata.get(0).get(1).asText(), is("Deposit to test"));
+        assertThat(metadata.get(1).get(0).asText(), is("text/identifier"));
+        assertThat(metadata.get(1).get(1).asText(), both(startsWith("test@")).and(endsWith(".onion")));
+        assertThat(metadata.get(2).get(0).asText(), is("text/tag"));
+        assertThat(metadata.get(2).get(1).asText(), is("my+tag"));
+    }
+
+    @Test
     void itShouldFetchInvoice() throws Exception {
         String body = mockMvc.perform(get("/.well-known/lnurlp/test")).andReturn()
                 .getResponse().getContentAsString();
 
-        LnurlPayCallbackData result = new ObjectMapper().readValue(body, LnurlPayCallbackData.class);
+        LnurlPayCallbackData result = objectMapper.readValue(body, LnurlPayCallbackData.class);
 
         String url = UriComponentsBuilder.fromUriString(result.getCallback())
                 .queryParam("amount", result.getMinSendable())

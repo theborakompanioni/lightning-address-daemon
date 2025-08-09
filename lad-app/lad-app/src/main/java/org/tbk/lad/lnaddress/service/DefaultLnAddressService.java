@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class DefaultLnAddressService implements LnAddressService {
@@ -22,13 +23,15 @@ public class DefaultLnAddressService implements LnAddressService {
     private final InvoiceProvider invoiceProvider;
 
     @Override
-    public Mono<LnurlPayCallbackData> toLnurlPayCallbackData(LnAddressParts lnAddressParts, LnAddressCallbackUrlResolver callbackUrlResolver) {
+    public Mono<LnurlPayCallbackData> toLnurlPayCallbackData(LnAddressParts lnAddressParts,
+                                                             LnAddressCallbackUrlResolver callbackUrlResolver) {
         URI callbackUrl = callbackUrlResolver.resolveLnurlPayCallbackUrl(lnAddressParts);
 
-        List<String> metadataList = List.of(
+        List<String> metadataList = Stream.of(
                 "[\"text/plain\",\"Deposit to %s\"]".formatted(lnAddressParts.getUsername()),
-                "[\"text/identifier\",\"%s\"]".formatted(lnAddressParts.getRaw())
-        );
+                "[\"text/identifier\",\"%s\"]".formatted(lnAddressParts.getIdentifier()),
+                lnAddressParts.getTag().map("[\"text/tag\",\"%s\"]"::formatted).orElse("")
+        ).filter(it -> !it.isBlank()).toList();
 
         return Mono.just(LnurlPayCallbackData.builder()
                 .callback(callbackUrl.toString())
@@ -40,7 +43,8 @@ public class DefaultLnAddressService implements LnAddressService {
     }
 
     @Override
-    public Mono<LnurlPayInvoiceData> toLnurlPayInvoiceData(LnurlPayCallbackData data, AmountAndComment amountAndComment) {
+    public Mono<LnurlPayInvoiceData> toLnurlPayInvoiceData(LnurlPayCallbackData data,
+                                                           AmountAndComment amountAndComment) {
 
         if (data.getCommentAllowed() <= 0 && amountAndComment.getComment().isPresent()) {
             throw new IllegalArgumentException("Comment not allowed");

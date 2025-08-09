@@ -16,7 +16,7 @@ class DefaultLnAddressResolverTest {
     @Test
     void shouldResolveStandardAddress() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("alice@example.com");
-        assertThat(lnAddressParts.getComment()).isEmpty();
+        assertThat(lnAddressParts.getTag()).isEmpty();
         assertThat(lnAddressParts.getDomain()).isEqualTo("example.com");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -27,7 +27,7 @@ class DefaultLnAddressResolverTest {
     @Test
     void shouldResolveAddressWithDots() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e@example.com");
-        assertThat(lnAddressParts.getComment()).isEmpty();
+        assertThat(lnAddressParts.getTag()).isEmpty();
         assertThat(lnAddressParts.getDomain()).isEqualTo("example.com");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -36,9 +36,9 @@ class DefaultLnAddressResolverTest {
     }
 
     @Test
-    void shouldResolveAddressWithComment() {
+    void shouldResolveAddressWithTag() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e+c.o.m.m.e.n.t.1@example.com");
-        assertThat(lnAddressParts.getComment()).isEqualTo(Optional.of("c.o.m.m.e.n.t.1"));
+        assertThat(lnAddressParts.getTag()).isEqualTo(Optional.of("c.o.m.m.e.n.t.1"));
         assertThat(lnAddressParts.getDomain()).isEqualTo("example.com");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -47,9 +47,9 @@ class DefaultLnAddressResolverTest {
     }
 
     @Test
-    void shouldResolveAddressWithEmptyComment() {
+    void shouldResolveAddressWithEmptyTag() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e+@example.com");
-        assertThat(lnAddressParts.getComment()).isEmpty();
+        assertThat(lnAddressParts.getTag()).isEmpty();
         assertThat(lnAddressParts.getDomain()).isEqualTo("example.com");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -57,13 +57,13 @@ class DefaultLnAddressResolverTest {
         assertThat(lnAddressParts.getScheme()).isEqualTo("https");
 
         LnAddressParts lnAddressParts2 = sut.resolveLnAddressParts("a.l.i.c.e+   @example.com");
-        assertThat(lnAddressParts2.getComment()).isEmpty();
+        assertThat(lnAddressParts2.getTag()).isEmpty();
     }
 
     @Test
     void shouldResolveTorAddress() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e+c.o.m.m.e.n.t.2@example.onion");
-        assertThat(lnAddressParts.getComment()).isEqualTo(Optional.of("c.o.m.m.e.n.t.2"));
+        assertThat(lnAddressParts.getTag()).isEqualTo(Optional.of("c.o.m.m.e.n.t.2"));
         assertThat(lnAddressParts.getDomain()).isEqualTo("example.onion");
         assertThat(lnAddressParts.getIsTor()).isTrue();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -74,7 +74,7 @@ class DefaultLnAddressResolverTest {
     @Test
     void shouldResolveLocalAddress() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e+c.o.m.m.e.n.t.3@localhost");
-        assertThat(lnAddressParts.getComment()).isEqualTo(Optional.of("c.o.m.m.e.n.t.3"));
+        assertThat(lnAddressParts.getTag()).isEqualTo(Optional.of("c.o.m.m.e.n.t.3"));
         assertThat(lnAddressParts.getDomain()).isEqualTo("localhost");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -85,7 +85,7 @@ class DefaultLnAddressResolverTest {
     @Test
     void shouldResolveLocalAddressWithPort() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("a.l.i.c.e+c.o.m.m.e.n.t.4@localhost:8080");
-        assertThat(lnAddressParts.getComment()).isEqualTo(Optional.of("c.o.m.m.e.n.t.4"));
+        assertThat(lnAddressParts.getTag()).isEqualTo(Optional.of("c.o.m.m.e.n.t.4"));
         assertThat(lnAddressParts.getDomain()).isEqualTo("localhost:8080");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("alice");
@@ -96,7 +96,7 @@ class DefaultLnAddressResolverTest {
     @Test
     void shouldResolveAddressWithMultiplePlusSigns() {
         LnAddressParts lnAddressParts = sut.resolveLnAddressParts("bob+here+you+are@localhost:8080");
-        assertThat(lnAddressParts.getComment()).isEqualTo(Optional.of("here+you+are"));
+        assertThat(lnAddressParts.getTag()).isEqualTo(Optional.of("here+you+are"));
         assertThat(lnAddressParts.getDomain()).isEqualTo("localhost:8080");
         assertThat(lnAddressParts.getIsTor()).isFalse();
         assertThat(lnAddressParts.getUsername()).isEqualTo("bob");

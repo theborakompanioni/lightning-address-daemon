@@ -113,7 +113,11 @@ public class LnAddressApi {
         String address = "%s@%s".formatted(username, host);
         LnAddressParts lnAddressParts = lnAddressResolver.resolveLnAddressParts(address);
 
-        return "%s@%s".formatted(lnAddressParts.getUsername(), lnAddressParts.getDomain());
+        return "%s%s@%s".formatted(
+                lnAddressParts.getUsername(),
+                lnAddressParts.getTag().map("+%s"::formatted).orElse(""),
+                lnAddressParts.getDomain()
+        );
     }
 
     private static LnAddressCallbackUrlResolver createCallbackUrlResolver(LnAddressParts lnAddressParts) {

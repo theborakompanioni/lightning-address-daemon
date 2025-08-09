@@ -36,7 +36,7 @@ public class DefaultLnAddressResolver implements LnAddressResolver {
             throw new ConstraintViolationException("Invalid address", Collections.emptySet());
         }
 
-        String commentOrNull = Optional.of(firstPlusSignIndex <= 0 ? "" : raw.substring(firstPlusSignIndex + 1, atSignIndex))
+        String tagOrNull = Optional.of(firstPlusSignIndex <= 0 ? "" : raw.substring(firstPlusSignIndex + 1, atSignIndex))
                 .filter(it -> !it.isBlank())
                 .orElse(null);
 
@@ -49,7 +49,7 @@ public class DefaultLnAddressResolver implements LnAddressResolver {
         return LnAddressParts.builder()
                 .raw(raw)
                 .username(username)
-                .comment(commentOrNull)
+                .tag(tagOrNull)
                 .scheme(scheme)
                 .domain(sanitizedDomain)
                 .isTor(isTor)

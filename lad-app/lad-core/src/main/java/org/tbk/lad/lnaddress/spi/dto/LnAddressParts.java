@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Value
@@ -24,9 +25,14 @@ public class LnAddressParts {
     @NonNull
     Boolean isTor;
 
-    String comment;
+    @Nullable
+    String tag;
 
-    public Optional<String> getComment() {
-        return Optional.ofNullable(comment);
+    public Optional<String> getTag() {
+        return Optional.ofNullable(tag);
+    }
+
+    public String getIdentifier() {
+        return "%s@%s".formatted(username, domain);
     }
 }
