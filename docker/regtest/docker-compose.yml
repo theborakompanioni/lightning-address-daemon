@@ -3,7 +3,7 @@ version: "3"
 services:
   bitcoind_regtest:
     container_name: bitcoind0
-    image: polarlightning/bitcoind:26.0
+    image: polarlightning/bitcoind:27.0@sha256:7ac359cacd1c667fae321fe049d3d860eb85f1f14aff805e96246c5dc70f2f13
     restart: always
     command:
       -regtest=1
@@ -40,7 +40,7 @@ services:
 
   lnd_regtest:
     container_name: lnd0
-    image: polarlightning/lnd:0.17.3-beta
+    image: polarlightning/lnd:0.19.2-beta@sha256:cfeb4debcce182c32bca3f06738d2c370b190b31a24905fb78b92f6c6ff52674
     restart: always
     depends_on:
       bitcoind_regtest:
