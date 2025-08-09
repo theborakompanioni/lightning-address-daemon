@@ -2,6 +2,5 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <logger name="org.tbk.pristine" level="INFO"/>
     <logger name="org.tbk.lad.LadApplication" level="INFO"/>
 </configuration>

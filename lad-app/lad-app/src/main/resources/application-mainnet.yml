@@ -1,0 +1,10 @@
+app.name: lad
+app.description: Lightning Address Daemon
+app.home: '${user.home}/.lad'
+
+org.tbk.lightning.lnd.grpc:
+  enabled: true
+  host: localhost
+  port: 20009
+  macaroon-base64: '<my_admin_macaroon_in_base64>'
+  cert-base64: '<my_tls_cert_in_base64>'

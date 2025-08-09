@@ -36,15 +36,13 @@ spring.jpa.open-in-view: true # default is `true`, explicitly defined to hide th
 spring.jpa.properties.hibernate.dialect: org.hibernate.community.dialect.SQLiteDialect
 spring.jpa.properties.hibernate.jdbc.time_zone: UTC
 
+spring.docker.compose:
+  enabled: false
+
 org.tbk.tor:
   enabled: true
   auto-publish-enabled: true
   working-directory: '${app.home}/tor-working-dir'
   startup-timeout: 60s
 
-org.tbk.lightning.lnd.grpc:
-  enabled: true
-  host: localhost
-  port: 20009
-  macaroon-base64: '<my_admin_macaroon_in_base64>'
-  cert-base64: '<my_tls_cert_in_base64>'
+spring.profiles.default: development, local
