@@ -2,8 +2,8 @@ ext {
     bitcoinSpringBootStarterVersion = '0.16.0'
     torSpringBootStarterVersion = '0.9.0'
     guavaVersion = '33.6.0-jre'
-    jmoleculesBomVersion = '2023.1.6'
-    bytebuddyPluginVersion = '1.17.3' // keep in sync with `jmoleculesBomVersion`
+    jmoleculesBomVersion = '2025.0.2'
+    bytebuddyPluginVersion = '1.18.8' // keep in sync with `jmoleculesBomVersion`
     sqliteVersion = '3.48.0.0'
     hibernateCommunityDialectsVersion = '6.6.49.Final'
     lombokVersion = '1.18.46'
