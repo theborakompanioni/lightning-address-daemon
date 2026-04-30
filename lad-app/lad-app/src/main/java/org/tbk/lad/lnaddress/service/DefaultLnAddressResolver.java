@@ -57,7 +57,7 @@ public class DefaultLnAddressResolver implements LnAddressResolver {
     }
 
     private static String sanitizeDomain(String domain, String scheme) {
-        String sanitizedDomain = UriComponentsBuilder.fromHttpUrl("%s://%s".formatted(scheme, domain))
+        String sanitizedDomain = UriComponentsBuilder.fromUriString("%s://%s".formatted(scheme, domain))
                 .replacePath(null)
                 .replaceQuery(null)
                 .fragment(null)

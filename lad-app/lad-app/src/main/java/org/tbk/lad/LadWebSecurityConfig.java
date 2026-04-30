@@ -13,8 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Slf4j
 @Configuration(proxyBeanMethods = false)
@@ -34,24 +33,24 @@ class LadWebSecurityConfig implements WebSecurityCustomizer {
                 // allow GET requests to LNURL endpoints
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
-                            antMatcher(HttpMethod.GET, "/.well-known/lnurlp/**"),
-                            antMatcher(HttpMethod.GET, "/api/v1/lnurl/pay/**")
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/.well-known/lnurlp/**"),
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/api/v1/lnurl/pay/**")
                     ).permitAll();
                 })
                 // allow static resources
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
-                            antMatcher(HttpMethod.GET,"/"),
-                            antMatcher(HttpMethod.GET,"/index.html"),
-                            antMatcher(HttpMethod.GET,"/fonts/**"),
-                            PathRequest.toStaticResources().atCommonLocations()
+                            PathRequest.toStaticResources().atCommonLocations(),
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/"),
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/index.html"),
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/fonts/**")
                     ).permitAll();
                 })
                 // allow swagger-ui
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
-                        antMatcher(HttpMethod.GET, "/swagger-ui.html"),
-                        antMatcher(HttpMethod.GET, "/swagger-ui/**"),
-                        antMatcher(HttpMethod.GET, "/v3/api-docs/**")
+                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/swagger-ui.html"),
+                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/v3/api-docs/**")
                 ).permitAll())
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().authenticated();

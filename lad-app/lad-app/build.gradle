@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.jmolecules:jmolecules-ddd'
     implementation 'org.jmolecules:jmolecules-events'
     implementation 'org.jmolecules.integrations:jmolecules-jpa'
+    implementation 'org.jmolecules.integrations:jmolecules-ddd-integration'
     implementation 'org.jmolecules.integrations:jmolecules-spring'
     implementation 'org.jmolecules.integrations:jmolecules-jackson'
 
@@ -46,5 +47,4 @@ dependencies {
 
     integTestImplementation 'org.springframework.boot:spring-boot-docker-compose'
     integTestImplementation "io.github.theborakompanioni:bitcoin-regtest-starter:${bitcoinSpringBootStarterVersion}"
-
 }

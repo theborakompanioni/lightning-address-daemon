@@ -2,6 +2,7 @@ package org.tbk.lad.lnaddress.service;
 
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.util.InvalidUrlException;
 import org.tbk.lad.lnaddress.spi.dto.LnAddressParts;
 
 import java.util.Optional;
@@ -119,7 +120,7 @@ class DefaultLnAddressResolverTest {
         assertThrowsExactly(ConstraintViolationException.class, () -> sut.resolveLnAddressParts(" + @example.com"));
         assertThrowsExactly(ConstraintViolationException.class, () -> sut.resolveLnAddressParts("bob@example+com"));
 
-        IllegalStateException ise = assertThrowsExactly(IllegalStateException.class, () -> sut.resolveLnAddressParts("bob@example com"));
-        assertThat(ise.getMessage()).startsWith("Could not create URI object: Illegal character in authority at index");
+        InvalidUrlException iue = assertThrowsExactly(InvalidUrlException.class, () -> sut.resolveLnAddressParts("bob@example com"));
+        assertThat(iue.getMessage()).startsWith("Bad authority");
     }
 }
