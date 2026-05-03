@@ -5,7 +5,7 @@ ext {
     jmoleculesBomVersion = '2025.0.2'
     bytebuddyPluginVersion = '1.18.8' // keep in sync with `jmoleculesBomVersion`
     sqliteVersion = '3.53.0.0'
-    hibernateCommunityDialectsVersion = '6.6.49.Final'
+    hibernateCommunityDialectsVersion = '6.6.50.Final'
     lombokVersion = '1.18.46'
     springdocOpenApiVersion = '2.8.17'
     checkstyleVersion = '13.4.2'
