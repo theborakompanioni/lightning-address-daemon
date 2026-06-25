@@ -10,7 +10,7 @@ ext {
     springdocOpenApiVersion = '2.8.17'
     checkstyleVersion = '13.6.0'
     findsecbugsPluginVersion = '1.14.0'
-    springBootGradlePluginVersion = '3.5.15'
+    springBootGradlePluginVersion = '3.5.16'
     zxingVersion = '3.5.0'
 }
 
