@@ -3,7 +3,7 @@ ext {
     torSpringBootStarterVersion = '0.10.0'
     guavaVersion = '33.6.0-jre'
     jmoleculesBomVersion = '2025.0.2'
-    bytebuddyPluginVersion = '1.18.8' // keep in sync with `jmoleculesBomVersion`
+    bytebuddyPluginVersion = '1.18.13' // keep in sync with `jmoleculesBomVersion`
     sqliteVersion = '3.53.2.1'
     hibernateCommunityDialectsVersion = '6.6.55.Final'
     lombokVersion = '1.18.46'
